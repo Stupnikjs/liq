@@ -110,3 +110,43 @@ func GetLeastCollateralized(client *w3.Client, n int) ([]Trove, error) {
 
 	return troves, nil
 }
+
+
+
+
+type Branch struct {
+    Name        string
+    MCR         *big.Int
+    TroveManager common.Address
+    SortedTroves common.Address
+    StabilityPool common.Address
+}
+
+var branches = []Branch{
+    {
+        Name:         "WETH",
+        MCR:          mcrFromPercent(110),
+        TroveManager: common.HexToAddress("0x..."),
+        SortedTroves: common.HexToAddress("0x..."),
+    },
+    {
+        Name:         "wstETH",
+        MCR:          mcrFromPercent(120),
+        TroveManager: common.HexToAddress("0x..."),
+        SortedTroves: common.HexToAddress("0x..."),
+    },
+    {
+        Name:         "rETH",
+        MCR:          mcrFromPercent(120),
+        TroveManager: common.HexToAddress("0x..."),
+        SortedTroves: common.HexToAddress("0x..."),
+    },
+}
+
+// Les fonctions prennent un uint256 troveId maintenant
+var (
+    funcGetCurrentICR    = w3.MustNewFunc("getCurrentICR(uint256,uint256)", "uint256")
+    funcGetTroveEntireDebt = w3.MustNewFunc("getTroveEntireDebt(uint256)", "uint256")
+    funcBatchLiquidate   = w3.MustNewFunc("batchLiquidateTroves(uint256[])", "")
+    funcSortedGetNext    = w3.MustNewFunc("getNext(uint256)", "uint256") // uint256 pas address
+)
